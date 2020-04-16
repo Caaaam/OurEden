@@ -11,17 +11,18 @@ Edited from https://www.youtube.com/watch?v=ujflrixMl8I
 import praw 
 import re
 import time 
-import numpy as np
+import random
 
 # Edit these each time for subreddits, see an example below
 # For the sake of avoiding spam, keep this reasonable
-subreddits = ['sustainability', 
-              'ExtinctionRebellion', 
-              'environmental_science',
+subreddits = ['Sustainable',
+              'Futurology',
               'Green',
-              'FridaysForFuture',
-              'Sustainable',
-              'Futurology']
+              'environmental_science',
+              'sustainability',
+              'ClimateOffensive',
+              'ExtinctionRebellion',
+              'videos']
 # Edit this with a title for the post
 title = 'The science behind a group of chemicals called PFASs, the chemicals at the focal point of the film Dark Waters, which discusses how the chemicals contaminated drinking water across America'
 # Edit this with the relevant media to be shared
@@ -50,27 +51,31 @@ errors = 0
 
 # Function to post in all subreddits
 def post(): 
-    # Grabs global variables
+    # Grabs and defines global variables
     global subreddits
     global pos 
     global errors
-    
+    global time_delay
+    global delay_secs
+    global delay_mins
+        
     # Try statement for reddit spitting back errors
     # such as: you post too much 
     try:
         # submits to 
         subreddit = reddit.subreddit(subreddits[pos])
         subreddit.submit(title, url=url)
+        print('\nPosted to ' + subreddits[pos])
 
         # lazy iterator
         pos += 1
         
         # check if posted to all subreddits
-        if pos <= len(subreddits) - 1:
-            # calls post function again after a time delay
-            time_delay = np.randint(low=1, high=5)
-            time_delay2 = np.randint(low=1, high=60)
-            time.sleep(5 + int(time_delay)*60 + time_delay2)
+        if (pos <= len(subreddits) - 1):
+            # Adds a delay of random mins up to 5 + random seconds
+            delay_secs = int(random.randint(1,60))
+            delay_mins = int(random.randint(1,5) * 60)
+            time.sleep(delay_mins + delay_secs)
             post()
         else:
             print('Done!')
@@ -83,14 +88,14 @@ def post():
             
             if delay: 
                 delay_seconds = float(int(delay.group(1)) * 60)
-                time_delay = np.randint(low=1, high=60)
+                time_delay = int(random.randint(1,60))
                 time.sleep(delay_seconds + int(time_delay))
                 post()
             # looks for seconds if delay not found for minutes
             else: 
                 delay = re.search("(\d+) seconds?", error.message)
                 delay_seconds = float(delay.group(1))
-                time_delay = np.randint(low=1, high=60)
+                time_delay = int(random.randint(1,60))
                 time.sleep(delay_seconds + int(time_delay))
                 post()
             
