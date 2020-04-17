@@ -15,18 +15,36 @@ import random
 
 # Edit these each time for subreddits, see an example below
 # For the sake of avoiding spam, keep this reasonable
-subreddits = ['Sustainable',
+subreddits = []
+
+# General subreddits
+
+subreddits.extend(['Sustainable',
               'Futurology',
               'Green',
-              'environmental_science',
               'sustainability',
               'ClimateOffensive',
               'ExtinctionRebellion',
-              'videos']
+              'videos',
+              'collapse',
+              'nature',
+              'climate',
+              'GlobalWarming'])
+
+
+# Sciencey subreddits, choose these carefully
+'''
+subreddit.extend(['environmental_science',
+                    'chemistry',
+                    'physics',
+                    'geography',
+                    'RenewableEnergy'])
+'''
+
 # Edit this with a title for the post
-title = 'The science behind a group of chemicals called PFASs, the chemicals at the focal point of the film Dark Waters, which discusses how the chemicals contaminated drinking water across America'
+title = "How Bhutan's unique political and social landscape has allowed it to become the first modern day carbon negative country in the world."
 # Edit this with the relevant media to be shared
-url = 'https://www.youtube.com/watch?v=UGa-MWSuVdk'
+url = 'https://youtu.be/0aW-zIkQe9w'
 
 # API connection to reddit
 #
@@ -39,8 +57,8 @@ url = 'https://www.youtube.com/watch?v=UGa-MWSuVdk'
 #    underneath personal use script, undereneath the app name
 # 4. Edit 'client_secret' in code below to secret on web page
 # 5. Edit the username and password
-reddit = praw.Reddit(client_id='ILsFGH8r7R6L5A',
-                     client_secret='yyMhiynw9rCqp1i4ykR2aSTrCD8',
+reddit = praw.Reddit(client_id='',
+                     client_secret='',
                      user_agent = '<terminal:botforreddit:1.0 (by /u/OurEdenMedia)>',
                      username = 'OurEdenMedia',
                      password = '')
@@ -65,7 +83,7 @@ def post():
         # submits to 
         subreddit = reddit.subreddit(subreddits[pos])
         subreddit.submit(title, url=url)
-        print('\nPosted to ' + subreddits[pos])
+        print('\nPosted to ' + subreddits[pos] + '!')
 
         # lazy iterator
         pos += 1
@@ -74,8 +92,9 @@ def post():
         if (pos <= len(subreddits) - 1):
             # Adds a delay of random mins up to 5 + random seconds
             delay_secs = int(random.randint(1,60))
-            delay_mins = int(random.randint(1,5) * 60)
-            time.sleep(delay_mins + delay_secs)
+            delay_mins = int(random.randint(1,5))
+            print(f"\nWaiting for {delay_mins} minutes and {delay_secs} seconds to post to the next subreddit...")
+            time.sleep(delay_mins*60 + delay_secs)
             post()
         else:
             print('Done!')
